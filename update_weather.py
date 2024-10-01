@@ -1,11 +1,12 @@
 from dssatservice.data import ingest
 import dssatservice.database as db
+import psycopg2 as pg
 from datetime import datetime, timedelta
+import requests
 
 
 COUNTRIES = ["kenya", "zimbabwe"]
-DBNAME = "dssatserv"
-con = db.connect(DBNAME)
+con = pg.connect(dbname="dssatserv")
 cur = con.cursor()
     
 if __name__ == "__main__":
@@ -19,7 +20,7 @@ if __name__ == "__main__":
             latest = cur.fetchone()[0]
             latest_dates.append(datetime(latest.year, latest.month, latest.day))
         latest = min(latest_dates)
-        ingest.ingest_era5_series(DBNAME, schema, latest, today)
+        ingest.ingest_era5_series(con, schema, latest, today)
         
         # If there is any date that is missing in any of the variables it'll
         # download that data.
@@ -32,6 +33,21 @@ if __name__ == "__main__":
                 datetime(2010, 1, 1), latest
             )
             for date in missing_dates:
-                ingest.ingest_era5_record(DBNAME, schema, date)
+                ingest.ingest_era5_record(con, schema, date)
+                
+        # Check if new NMME Data is available
+        r = requests.get(
+            "https://climateserv.servirglobal.net/api/getClimateScenarioInfo/"
+        )
+        forecast_info = r.json()["climate_DataTypeCapabilities"][0]["current_Capabilities"]
+        start_date = datetime.strptime(forecast_info["startDateTime"], "%Y-%m-%d")
+        end_date = datetime.strptime(forecast_info["endDateTime"], "%Y-%m-%d")
+        
+        sql = f"SELECT MAX(fdate) FROM {schema}.nmme_rain;"
+        cur.execute(sql)
+        latest = cur.fetchone()[0]
+        if end_date.date() > latest:
+            ingest.ingest_nmme(con, schema)
+        
     cur.close()
     con.close()
