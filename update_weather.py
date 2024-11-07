@@ -9,6 +9,9 @@ COUNTRIES = ["kenya", "zimbabwe"]
 con = pg.connect(dbname="dssatserv")
 cur = con.cursor()
     
+# for i in range(2, 11):
+#     ingest.ingest_nmme_rain(con, "kenya", i)
+# exit()
 if __name__ == "__main__":
     today = datetime.today()
     for schema in COUNTRIES:
@@ -42,12 +45,20 @@ if __name__ == "__main__":
         forecast_info = r.json()["climate_DataTypeCapabilities"][0]["current_Capabilities"]
         start_date = datetime.strptime(forecast_info["startDateTime"], "%Y-%m-%d")
         end_date = datetime.strptime(forecast_info["endDateTime"], "%Y-%m-%d")
-        
-        sql = f"SELECT MAX(fdate) FROM {schema}.nmme_rain;"
-        cur.execute(sql)
-        latest = cur.fetchone()[0]
-        if end_date.date() > latest:
-            ingest.ingest_nmme(con, schema)
+        for ens in range(1, 11):
+    #     ingest.ingest_nmme_rain(con, "kenya", i)
+            sql = f"SELECT MAX(fdate) FROM {schema}.nmme_rain WHERE ens={ens};"
+            cur.execute(sql)
+            latest = cur.fetchone()[0]
+            if end_date.date() > latest:
+                # ingest.ingest_nmme(con, schema)
+                ingest.ingest_nmme_rain(con, schema, ens)
+            sql = f"SELECT MAX(fdate) FROM {schema}.nmme_tmax WHERE ens={ens};"
+            cur.execute(sql)
+            latest = cur.fetchone()[0]
+            if end_date.date() > latest:
+                # ingest.ingest_nmme(con, schema)
+                ingest.ingest_nmme_temp(con, schema, ens)
         
     cur.close()
     con.close()

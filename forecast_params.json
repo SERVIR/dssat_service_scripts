@@ -1,0 +1,31 @@
+{
+    "Kenya": {
+        "DATA_PATH": "/home/dquintero/dssat_error_paper/data/kenya/",
+        "NITROGEN_RATES_PATH": "/home/dquintero/dssat_error_paper/data/kenya/fertilizer/clean_data.csv",
+        "GEO_PATH":"/home/dquintero/dssat_service/forecast_data/Kenya/admin.geojson",
+        "N_RATIO": 0.24 ,
+        "ADMIN_TO_REMOVE": ["Mombasa"], 
+        "SEASONS": {
+            "LONG_RAINS":{
+                "PLANTING_DATES_PATH": "/home/dquintero/dssat_error_paper/data/kenya/phenology_kenya/tifs_10km/SOS1_Avg.tif",
+                "CULTIVARS_PATH": "/home/dquintero/dssat_service/cultivar_selection/Kenya/skilled_cultivars.csv",
+                "MONTH_START": 1,
+                "OBS_DATA": "/home/dquintero/dssat_service/forecast_data/Kenya/obs_data.csv",
+                "OBS_ADMIN_MAP": {
+                    "Tharaka Nithi": "Tharaka-Nithi"
+                },
+                "OBS_COL_MAP": {"admin_1": "admin1"}
+            },
+            "SHORT_RAINS":{
+                "PLANTING_DATES_PATH": "/home/dquintero/dssat_error_paper/data/kenya/phenology_kenya/tifs_10km_shortRains/SOS2_Avg.tif",
+                "CULTIVARS_PATH": "/home/dquintero/dssat_service/cultivar_selection/Kenya/skilled_cultivars_shortRains.csv",
+                "MONTH_START": 6,
+                "OBS_DATA": "/home/dquintero/dssat_service/forecast_data/Kenya/obs_data_shortRains.csv",
+                "OBS_ADMIN_MAP": {
+                    "Tharaka Nithi": "Tharaka-Nithi"
+                },
+                "OBS_COL_MAP": {"admin_1": "admin1"}
+            }
+        }
+    }
+}
