@@ -3,6 +3,10 @@
         "DATA_PATH": "/home/dquintero/dssat_error_paper/data/kenya/",
         "NITROGEN_RATES_PATH": "/home/dquintero/dssat_error_paper/data/kenya/fertilizer/clean_data.csv",
         "GEO_PATH":"/home/dquintero/dssat_service/forecast_data/Kenya/admin.geojson",
+        "NITRO_ADMIN_COL": "admin1",
+        "OBS_ADMIN_COL": "admin_1",
+        "GEO_ADMIN_COL": "admin1",
+        "CUL_ADMIN_COL": "admin1",
         "N_RATIO": 0.24 ,
         "ADMIN_TO_REMOVE": ["Mombasa"], 
         "SEASONS": {
@@ -13,8 +17,7 @@
                 "OBS_DATA": "/home/dquintero/dssat_service/forecast_data/Kenya/obs_data.csv",
                 "OBS_ADMIN_MAP": {
                     "Tharaka Nithi": "Tharaka-Nithi"
-                },
-                "OBS_COL_MAP": {"admin_1": "admin1"}
+                }
             },
             "SHORT_RAINS":{
                 "PLANTING_DATES_PATH": "/home/dquintero/dssat_error_paper/data/kenya/phenology_kenya/tifs_10km_shortRains/SOS2_Avg.tif",
@@ -23,8 +26,30 @@
                 "OBS_DATA": "/home/dquintero/dssat_service/forecast_data/Kenya/obs_data_shortRains.csv",
                 "OBS_ADMIN_MAP": {
                     "Tharaka Nithi": "Tharaka-Nithi"
-                },
-                "OBS_COL_MAP": {"admin_1": "admin1"}
+                }
+            }
+        }
+    },
+    "Zimbabwe": {
+        "DATA_PATH": "/home/dquintero/dssat_service/cultivar_selection/Zimbabwe/data",
+        "NITROGEN_RATES_PATH": "/home/dquintero/dssat_service/cultivar_selection/Zimbabwe/data/nitrogen_rate.csv",
+        "GEO_PATH":"/home/dquintero/dssat_service/cultivar_selection/Zimbabwe/data/zimbabwe_fewsnet_admin2.geojson",
+        "NITRO_ADMIN_COL": "admin1",
+        "OBS_ADMIN_COL": "admin_2",
+        "GEO_ADMIN_COL": "admin_2",
+        "CUL_ADMIN_COL": "admin1",
+        "N_RATIO": 1.0 ,
+        "ADMIN_TO_REMOVE": [
+             "Chinhoyi Urban", "Kadoma Urban", "Chipinge Urban", "Gokwe South Urban", "Karoi Urban", "Kwekwe Urban", "Rusape Urban", "Marondera Urban", "Kariba Urban", "Zvishavane Urban", "Gwanda Urban", "Chiredzi Urban", "Epworth", "Mutare Urban", "Chegutu Urban", "Bindura Urban", "Ruwa", "Chitungwiza", "Shurugwi Urban", "Gweru Urban", "Beitbridge Urban", "Masvingo Urban", "Plumtree", "Redcliff", "Victoria Falls"
+        ],
+        "SEASONS": {
+            "MAIN":{
+                "PLANTING_DATES_PATH": "/home/dquintero/dssat_service/cultivar_selection/Zimbabwe/data/zimbabwe_modis_sos_cropSuitable.tif",
+                "CULTIVARS_PATH": "/home/dquintero/dssat_service/cultivar_selection/Zimbabwe/skilled_cultivars.csv",
+                "MONTH_START": 9,
+                "OBS_DATA": "/home/dquintero/dssat_service/cultivar_selection/Zimbabwe/data/zimbabwe_main_maize.csv",
+                "OBS_ADMIN_MAP": {},
+                "OBS_COL_MAP": {"admin_2": "admin1"}
             }
         }
     }
