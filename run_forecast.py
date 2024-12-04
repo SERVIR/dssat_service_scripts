@@ -1,3 +1,46 @@
+"""
+Runs the forecast using the latest weather data in the database. To run, pass
+the country, season name, and year as arguments. For example: 
+    
+    python run_forecast.py Kenya SHORT_RAINS 2024
+
+The script generates two files, one with the DSSAT end of season output, and one 
+with the DSSAT Overview file. Those files are saved in 
+/home/dquintero/dssat_service/forecast_data/COUNTRY folder.
+
+The forecast_params.json with forecast input parameters is needed. The json 
+has the next structure:
+    
+    Country_1: {
+        NITROGEN_RATES_PATH: Path to a CSV with nitrogen rates in the 'nitro' 
+            column.
+        GEO_PATH: path to geojson with admin units. 
+        NITRO_ADMIN_COL: name of admin name column in NITROGEN_RATES_PATH.
+        OBS_ADMIN_COL: name of admin name column in OBS_DATA.
+        GEO_ADMIN_COL: name of admin name column in GEO_PATH.
+        CUL_ADMIN_COL: name of admin name column in CULTIVARS_PATH.
+        N_RATIO: scale factor to convert to fertilizer rates in NITROGEN_RATES_PATH
+            to Nitrogen rate.
+        ADMIN_TO_REMOVE: admin units in GEO_PATH that are excluded from forecast.
+            Those are very small admin units that usually are urban.
+        SEASONS: {
+            SEASON_1: {
+                PLANTING_DATES_PATH: tif with planting dates (10 km). Planting
+                    dates are in Day of Year form.
+                CULTIVARS_PATH: csv with cultivars to use for each admin unit.
+                MONTH_START: month to start simulations for that season.
+                OBS_DATA: csv file with observed data. Observed yield is in the
+                    'value' column. Units are ton/ha.
+                OBS_ADMIN_MAP: dictionary mapping db admin names to GEO_PATH admin
+                    names. Only needed in case that db admin names differ with 
+                    those of GEO_PATH.
+            },
+            SEASON_2: {...}
+        }
+    },
+    Country_2: {...}           
+"""
+
 from dssatservice.dssat import run_spatial_dssat
 from dssatservice.data.transform import parse_overview
 import psycopg2 as pg
@@ -7,6 +50,7 @@ from spatialDSSAT.run import GSRun
 import pandas as pd
 import numpy as np
 import geopandas as gpd
+import sys
 
 import json
 with open("forecast_params.json", "r") as f:
@@ -14,11 +58,23 @@ with open("forecast_params.json", "r") as f:
     
 # COUNTRY = "Kenya"
 # SEASON = "SHORT_RAINS"
-COUNTRY = "Zimbabwe"
-SEASON = "MAIN"
+# COUNTRY = "Zimbabwe"
+# SEASON = "MAIN"
+try:
+    COUNTRY = str(sys.argv[1])
+    SEASON = str(sys.argv[2])
+    YEAR = int(sys.argv[3])
+except IndexError:
+    print(
+        "ERROR: No input parameters defined.\n"
+        "Usage: python run_forecast.py COUNTRY SEASON_NAME YEAR\n"
+        "Example:\n"
+        "python run_forecast.py Kenya SHORT_RAINS 2024"
+    )
+    raise 
+
 params = params[COUNTRY]
 
-DATA_PATH = params["DATA_PATH"]
 NITROGEN_RATES_PATH = params["NITROGEN_RATES_PATH"] # Must have nitrogen rates in the nitro column, and admin unit name in the admin1 column
 NITRO_ADMIN_COL = params["NITRO_ADMIN_COL"]
 N_RATIO = params["N_RATIO"] # Scale factor for Nitrogen input 
@@ -32,9 +88,7 @@ CUL_ADMIN_COL = params["CUL_ADMIN_COL"]
 PLANTING_DATES_PATH = params["SEASONS"][SEASON]["PLANTING_DATES_PATH"] # Start of season tiff with SOS as day of year. 
 MONTH_START = params["SEASONS"][SEASON]["MONTH_START"] # Start DSSAT weather files from that month
 
-YEAR = 2024
 FORECAST_DIR = "/home/dquintero/dssat_service/forecast_data/"
-
 
 SEASON_NAMES = {
     "SHORT_RAINS": "Short rains",
@@ -66,7 +120,7 @@ geodf = geodf.set_index(GEO_ADMIN_COL)
 def get_dssat_inputs(admin1, startdate):
     inputs = run_spatial_dssat(
         con=con, 
-        schema=COUNTRY, 
+        schema=COUNTRY,  
         admin1=admin1,
         plantingdate=startdate,
         cultivar=None, # We're only getting files
@@ -125,26 +179,8 @@ def run_single(admin1, inputs, year, start_date, **kwargs):
     df["planting"] = pl_dates
     return df, gs.overview
 
-YEAR = 2024
-# 
-# admin1 = "Bomet"
-#To have files starting exactly on Jan 01
-# start_date = datetime(year, 1, 1) + timedelta(30)
 results = []
 overviews = []
-# counties = ["Nyandarua"] # TODO: REMOVE, I'm debugging
-
-# from dssatservice import database as db
-# import psycopg2 as pg
-
-# con = pg.connect(database="dssatserv")
-# problem_counties = []
-# for admin1 in counties[:]:
-    
-#     soils = db.get_soils(con, COUNTRY, admin1, 1)
-#     if len(soils) <= 4:
-#         problem_counties.append(admin1)
-#     continue
 
 for admin1 in counties[:]:
     min_planting = (
@@ -172,5 +208,6 @@ overviews.to_csv(
     f"{FORECAST_DIR}/{COUNTRY.title()}/forecast_overview_{datesuffix}.csv",
     index=False
 )
+
 exit()
 

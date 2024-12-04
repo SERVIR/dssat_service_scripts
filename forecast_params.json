@@ -1,9 +1,8 @@
 {
     "Kenya": {
-        "DATA_PATH": "/home/dquintero/dssat_error_paper/data/kenya/",
         "NITROGEN_RATES_PATH": "/home/dquintero/dssat_error_paper/data/kenya/fertilizer/clean_data.csv",
         "GEO_PATH":"/home/dquintero/dssat_service/forecast_data/Kenya/admin.geojson",
-        "NITRO_ADMIN_COL": "admin1",
+        "NITRO_ADMIN_COL": "County",
         "OBS_ADMIN_COL": "admin_1",
         "GEO_ADMIN_COL": "admin1",
         "CUL_ADMIN_COL": "admin1",
@@ -11,7 +10,7 @@
         "ADMIN_TO_REMOVE": ["Mombasa"], 
         "SEASONS": {
             "LONG_RAINS":{
-                "PLANTING_DATES_PATH": "/home/dquintero/dssat_error_paper/data/kenya/phenology_kenya/tifs_10km/SOS1_Avg.tif",
+                "PLANTING_DATES_PATH": "/home/dquintero/dssat_error_paper/data/kenya/phenology_kenya/tifs_10km/long_rains.tif",
                 "CULTIVARS_PATH": "/home/dquintero/dssat_service/cultivar_selection/Kenya/skilled_cultivars.csv",
                 "MONTH_START": 1,
                 "OBS_DATA": "/home/dquintero/dssat_service/forecast_data/Kenya/obs_data.csv",
@@ -20,7 +19,7 @@
                 }
             },
             "SHORT_RAINS":{
-                "PLANTING_DATES_PATH": "/home/dquintero/dssat_error_paper/data/kenya/phenology_kenya/tifs_10km_shortRains/SOS2_Avg.tif",
+                "PLANTING_DATES_PATH": "/home/dquintero/dssat_error_paper/data/kenya/phenology_kenya/tifs_10km_shortRains/short_rains.tif",
                 "CULTIVARS_PATH": "/home/dquintero/dssat_service/cultivar_selection/Kenya/skilled_cultivars_shortRains.csv",
                 "MONTH_START": 6,
                 "OBS_DATA": "/home/dquintero/dssat_service/forecast_data/Kenya/obs_data_shortRains.csv",
@@ -31,7 +30,6 @@
         }
     },
     "Zimbabwe": {
-        "DATA_PATH": "/home/dquintero/dssat_service/cultivar_selection/Zimbabwe/data",
         "NITROGEN_RATES_PATH": "/home/dquintero/dssat_service/cultivar_selection/Zimbabwe/data/nitrogen_rate.csv",
         "GEO_PATH":"/home/dquintero/dssat_service/cultivar_selection/Zimbabwe/data/zimbabwe_fewsnet_admin2.geojson",
         "NITRO_ADMIN_COL": "admin1",
@@ -48,8 +46,7 @@
                 "CULTIVARS_PATH": "/home/dquintero/dssat_service/cultivar_selection/Zimbabwe/skilled_cultivars.csv",
                 "MONTH_START": 9,
                 "OBS_DATA": "/home/dquintero/dssat_service/cultivar_selection/Zimbabwe/data/zimbabwe_main_maize.csv",
-                "OBS_ADMIN_MAP": {},
-                "OBS_COL_MAP": {"admin_2": "admin1"}
+                "OBS_ADMIN_MAP": {}
             }
         }
     }

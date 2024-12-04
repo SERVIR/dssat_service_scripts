@@ -1,14 +1,42 @@
+"""
+This program processes the files created with the run_forecast.py data. It 
+is run by passing the country, season, and date suffix as arguments. Example:
+    
+    python postprocess_forecast.py Kenya SHORT_RAINS 20241202
+    
+In the example, the script will look for the forecast files in 
+/home/dquintero/dssat_service/forecast_data/Kenya. The script creates the 
+latest_forecast.geojson.
+""" 
+
 import pandas as pd
 import geopandas as gpd
 from datetime import datetime
 import numpy as np
+import sys 
 
-COUNTRY = "Zimbabwe"
-SEASON = "MAIN"
+# COUNTRY = "Kenya"
+# SEASON = "SHORT_RAINS"
+# COUNTRY = "Zimbabwe"
+# SEASON = "MAIN"
 FORECAST_DIR = "/home/dquintero/dssat_service/forecast_data/"
+# datesuffix = "20241202"
 
-datesuffix = datetime.today().strftime("%Y%m%d")
-FORECAST_CSV_PATH = f"{FORECAST_DIR}/{COUNTRY}/forecast_{datesuffix}.csv"
+try:
+    COUNTRY = str(sys.argv[1])
+    SEASON = str(sys.argv[2])
+    DATE_SUFFIX = str(sys.argv[3])
+except IndexError:
+    print(
+        "ERROR: No input parameters defined.\n"
+        "Usage: python postprocess_forecast.py COUNTRY SEASON_NAME DATE_SUFFIX\n"
+        "Example:\n"
+        "python postprocess_forecast.py Kenya SHORT_RAINS 20241202"
+    )
+    raise 
+
+FORECAST_CSV_PATH = f"{FORECAST_DIR}/{COUNTRY}/forecast_{DATE_SUFFIX}.csv"
+
 
 import json
 with open("forecast_params.json", "r") as f:
@@ -43,7 +71,7 @@ observed_df = observed_df.set_index(OBS_ADMIN_COL)
 observed_df.index = observed_df.index.map(lambda x: OBS_ADMIN_MAP.get(x, x))
 observed_df["obs"] = 1000*observed_df.value
 geodf = gpd.read_file(GEO_PATH)
-geodf = geodf.set_index(OBS_ADMIN_COL)
+geodf = geodf.set_index(GEO_ADMIN_COL)
 geodf["pred"] = forecast_df.groupby(level="admin1").HARWT.mean()
 # geodf = geodf.dropna()
 # geodf = geodf.loc[geodf.index.isin(observed_df.index.unique())]
