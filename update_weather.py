@@ -3,10 +3,11 @@ import dssatservice.database as db
 import psycopg2 as pg
 from datetime import datetime, timedelta
 import requests
+import pandas as pd
 
 
 COUNTRIES = ["kenya", "zimbabwe"]
-con = pg.connect(dbname="dssatserv")
+con = pg.connect(dbname="dssatserv", password="******")
 cur = con.cursor()
     
 # for i in range(2, 11):
@@ -23,7 +24,12 @@ if __name__ == "__main__":
             latest = cur.fetchone()[0]
             latest_dates.append(datetime(latest.year, latest.month, latest.day))
         latest = min(latest_dates)
-        ingest.ingest_era5_series(con, schema, latest, today)
+        for date in pd.date_range(latest, today):
+            try:
+                ingest.ingest_era5_record(con, schema, date)
+            except:
+                continue
+        # ingest.ingest_era5_series(con, schema, latest, today)
         
         # If there is any date that is missing in any of the variables it'll
         # download that data.

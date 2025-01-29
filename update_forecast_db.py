@@ -28,7 +28,7 @@ except IndexError:
     )
     raise 
 
-con = pg.connect(dbname="dssatserv")
+con = pg.connect(dbname="dssatserv", password="******")
 schema = COUNTRY.lower()
 suffix = DATE_SUFFIX
 country = COUNTRY
