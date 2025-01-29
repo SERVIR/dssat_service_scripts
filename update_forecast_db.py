@@ -28,7 +28,7 @@ except IndexError:
     )
     raise 
 
-con = pg.connect(dbname="dssatserv")
+con = pg.connect(dbname="dssatserv", password="******")
 schema = COUNTRY.lower()
 suffix = DATE_SUFFIX
 country = COUNTRY
@@ -41,7 +41,7 @@ results_df = pd.read_csv(
     f"/home/dquintero/dssat_service/forecast_data/{country}/forecast_{suffix}.csv"
 )
 db.dataframe_to_table(
-    f"postgresql+psycopg2://{con.info.user}:eQY3_Fwd@localhost:{con.info.port}/{con.info.dbname}",
+    f"postgresql+psycopg2://{con.info.user}:{con.info.password}@localhost:{con.info.port}/{con.info.dbname}",
     results_df,
     schema,
     "latest_forecast_results",
@@ -52,7 +52,7 @@ overview_df = pd.read_csv(
     f"/home/dquintero/dssat_service/forecast_data/{country}/forecast_overview_{suffix}.csv"
 )
 db.dataframe_to_table(
-    f"postgresql+psycopg2://{con.info.user}:eQY3_Fwd@localhost:{con.info.port}/{con.info.dbname}",
+    f"postgresql+psycopg2://{con.info.user}:{con.info.password}@localhost:{con.info.port}/{con.info.dbname}",
     overview_df,
     schema,
     "latest_forecast_overview",
