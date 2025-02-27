@@ -88,14 +88,15 @@ CUL_ADMIN_COL = params["CUL_ADMIN_COL"]
 PLANTING_DATES_PATH = params["SEASONS"][SEASON]["PLANTING_DATES_PATH"] # Start of season tiff with SOS as day of year. 
 MONTH_START = params["SEASONS"][SEASON]["MONTH_START"] # Start DSSAT weather files from that month
 
-FORECAST_DIR = "/home/dquintero/dssat_service/forecast_data/"
+FORECAST_DIR = "/home/diego/dssat_service_data/forecast_output"
 
 SEASON_NAMES = {
     "SHORT_RAINS": "Short rains",
     "LONG_RAINS": "Long rains",
-    "MAIN": "Main"
+    "MAIN": "Main",
+    "A": "A"
 }
-con = pg.connect(dbname="dssatserv")
+con = pg.connect(dbname="dssatserv", password="******")
 
 cur = con.cursor()
 cur.execute(f"SELECT admin1 FROM {COUNTRY}.admin;")

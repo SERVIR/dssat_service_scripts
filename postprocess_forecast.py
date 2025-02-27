@@ -19,7 +19,7 @@ import sys
 # SEASON = "SHORT_RAINS"
 # COUNTRY = "Zimbabwe"
 # SEASON = "MAIN"
-FORECAST_DIR = "/home/dquintero/dssat_service/forecast_data/"
+FORECAST_DIR = "/home/diego/dssat_service_data/forecast_output"
 # datesuffix = "20241202"
 
 try:
@@ -43,7 +43,6 @@ with open("forecast_params.json", "r") as f:
     params = json.load(f)
     
 params = params[COUNTRY]
-DATA_PATH = params["DATA_PATH"]
 GEO_PATH = params["GEO_PATH"]
 GEO_ADMIN_COL = params["GEO_ADMIN_COL"]
 NITROGEN_RATES_PATH = params["NITROGEN_RATES_PATH"]

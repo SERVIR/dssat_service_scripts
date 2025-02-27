@@ -28,31 +28,32 @@ except IndexError:
     )
     raise 
 
-con = pg.connect(dbname="dssatserv", password="******")
+con = pg.connect(dbname="dssatserv", password="*****")
 schema = COUNTRY.lower()
 suffix = DATE_SUFFIX
 country = COUNTRY
 # This piece of code is to upload the latest forecast tables to the db
 # Forecast map
-file = f"/home/dquintero/dssat_service/forecast_data/{country}/latest_forecast.geojson"
+FORECAST_DIR = "/home/diego/dssat_service_data/forecast_output"
+file = f"{FORECAST_DIR}/{COUNTRY}/latest_forecast.geojson"
 db.add_latest_forecast(con, schema, file)
 # All simulations results
 results_df = pd.read_csv(
-    f"/home/dquintero/dssat_service/forecast_data/{country}/forecast_{suffix}.csv"
+    f"{FORECAST_DIR}/{country}/forecast_{suffix}.csv"
 )
 db.dataframe_to_table(
-    f"postgresql+psycopg2://{con.info.user}:{con.info.password}@localhost:{con.info.port}/{con.info.dbname}",
+    con,
     results_df,
     schema,
     "latest_forecast_results",
     "admin1"
 )
-    # Overview file info
+# Overview file info
 overview_df = pd.read_csv(
-    f"/home/dquintero/dssat_service/forecast_data/{country}/forecast_overview_{suffix}.csv"
+    f"{FORECAST_DIR}/{country}/forecast_overview_{suffix}.csv"
 )
 db.dataframe_to_table(
-    f"postgresql+psycopg2://{con.info.user}:{con.info.password}@localhost:{con.info.port}/{con.info.dbname}",
+    con,
     overview_df,
     schema,
     "latest_forecast_overview",

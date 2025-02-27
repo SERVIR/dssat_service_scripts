@@ -1,4 +1,4 @@
-from dssat import run_spatial_dssat
+from dssatservice.dssat import run_spatial_dssat
 
 import pandas as pd
 import os

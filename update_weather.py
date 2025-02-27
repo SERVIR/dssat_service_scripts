@@ -6,8 +6,9 @@ import requests
 import pandas as pd
 
 
-COUNTRIES = ["kenya", "zimbabwe"]
-con = pg.connect(dbname="dssatserv", password="******")
+# COUNTRIES = ["kenya", "zimbabwe"]
+COUNTRIES = ['Rwanda']
+con = pg.connect(dbname="dssatserv", password="*****")
 cur = con.cursor()
     
 # for i in range(2, 11):
@@ -39,7 +40,7 @@ if __name__ == "__main__":
             latest = cur.fetchone()[0]
             missing_dates = db.verify_series_continuity(
                 con, schema, f"era5_{var}",
-                datetime(2010, 1, 1), latest
+                datetime(2024, 1, 1), latest
             )
             for date in missing_dates:
                 ingest.ingest_era5_record(con, schema, date)
